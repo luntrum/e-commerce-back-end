@@ -57,9 +57,10 @@ const loginService = async (username, password) => {
 
 // Hàm lấy thông tin người dùng
 const getUserService = async (username) => {
-  console.log(username);
   try {
-    const user = await User.findOne({ username }).exec();
+    const user = await User.findOne({ username })
+      .select('-password -_id -__v')
+      .exec();
     if (user) {
       return {
         status: 200,

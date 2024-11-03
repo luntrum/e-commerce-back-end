@@ -4,7 +4,11 @@ const {
   handleLogin,
   getUser,
 } = require('../controllers/userController');
-const auth = require('../middleware/auth');
+const {
+  createProductController,
+  getProductController,
+  getAllProductsController,
+} = require('../controllers/productController');
 const routerAPI = express.Router();
 
 // routerAPI.all('*', auth);
@@ -12,9 +16,13 @@ const routerAPI = express.Router();
 routerAPI.get('/', (req, res) => {
   res.status(200).json({ message: 'api ok' });
 });
-
+//for user
 routerAPI.post('/register', createUser);
 routerAPI.post('/login', handleLogin);
 routerAPI.post('/user', getUser);
+
+routerAPI.post('/addProduct', createProductController);
+routerAPI.get('/getProduct', getProductController);
+routerAPI.get('/getAllProduct', getAllProductsController);
 
 module.exports = routerAPI;

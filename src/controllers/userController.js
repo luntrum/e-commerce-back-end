@@ -8,6 +8,8 @@ const {
 const createUser = async (req, res) => {
   const { name, username, email, password } = req.body;
 
+  console.log(req.body);
+
   const data = await createUserService(name, username, email, password);
 
   if (data) {
