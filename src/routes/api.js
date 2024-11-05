@@ -8,6 +8,7 @@ const {
   createProductController,
   getProductController,
   getAllProductsController,
+  selectProductController,
 } = require('../controllers/productController');
 const routerAPI = express.Router();
 
@@ -24,5 +25,5 @@ routerAPI.post('/user', getUser);
 routerAPI.post('/addProduct', createProductController);
 routerAPI.get('/getProduct', getProductController);
 routerAPI.get('/getAllProduct', getAllProductsController);
-
+routerAPI.post('/selectProduct', selectProductController);
 module.exports = routerAPI;

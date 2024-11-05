@@ -22,6 +22,20 @@ const userSchema = new mongoose.Schema({
   role: {
     type: String,
   },
+  selectedProducts: [
+    {
+      productId: {
+        type: Number,
+        unique: true,
+        ref: 'Product',
+      },
+      quantity: {
+        type: Number,
+        required: true,
+        min: 1, // Số lượng tối thiểu là 1
+      },
+    },
+  ],
 });
 
 const User = mongoose.model('User', userSchema);

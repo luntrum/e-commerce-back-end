@@ -1,5 +1,8 @@
 require('dotenv').config();
+
+const { default: mongoose } = require('mongoose');
 const Product = require('../models/products');
+const User = require('../models/user');
 const createProductService = async (data) => {
   try {
     const product = await Product.findOne({ name: data.name }).exec();
@@ -42,8 +45,43 @@ const getAllProductsService = async () => {
   }
 };
 
+const selectProductService = async (userId, productId) => {
+
+  try {
+    const updateUser = await User.findById(userId).exec();
+    if (!updateUser) {
+      return { status: 400, message: 'User not found' };
+    } else {
+      const productExist = updateUser.selectedProducts.find(
+        (sp) => sp.productId === productId,
+      );
+      if (productExist) {
+        await User.updateOne(
+          { _id: userId, 'selectedProducts.productId': productId },
+          { $inc: { 'selectedProducts.$.quantity': 1 } },
+        );
+      } else {
+        await User.updateOne(
+          { _id: userId },
+          { $addToSet: { selectedProducts: { productId, quantity: 1 } } },
+        );
+      }
+    }
+    const resdata = updateUser.selectedProducts;
+    return {
+      status: 200,
+      data: resdata,
+      message: 'Product added to user successfully',
+    };
+  } catch (error) {
+    console.log(error);
+    return { status: 500, message: 'Internal server error' };
+  }
+};
+
 module.exports = {
   createProductService,
   getProductService,
   getAllProductsService,
+  selectProductService,
 };

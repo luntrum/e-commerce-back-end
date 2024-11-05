@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const AutoIncrement = require('mongoose-sequence')(mongoose);
 
 const productSchema = new mongoose.Schema({
   name: {
@@ -19,13 +20,22 @@ const productSchema = new mongoose.Schema({
   title: {
     type: String,
     required: true,
-    
   },
   image: {
     type: String,
     required: true,
     match: /^https?:\/\/.*\.(jpeg|jpg|png|gif)$/i, // Ensures the string is a URL for an image file
   },
+  product_id: {
+    type: Number,
+    unique: true,
+  },
+});
+
+productSchema.plugin(AutoIncrement, {
+  inc_field: 'product_id',
+  id: 'auto',
+  start_seq: 1,
 });
 
 const Product = mongoose.model('Product', productSchema);

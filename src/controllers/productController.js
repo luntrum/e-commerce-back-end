@@ -2,6 +2,7 @@ const {
   createProductService,
   getProductService,
   getAllProductsService,
+  selectProductService,
 } = require('../services/productService');
 
 const createProductController = async (req, res) => {
@@ -19,7 +20,7 @@ const getProductController = async (req, res) => {
   const { name } = req.body;
   try {
     const data = await getProductService(name);
-    console.log(data);
+
     if (data) {
       return res.status(200).json(data);
     } else {
@@ -40,8 +41,22 @@ const getAllProductsController = async (req, res) => {
   }
 };
 
+const selectProductController = async (req, res) => {
+  const { userId, productId } = req.body;
+
+
+  try {
+    const response = await selectProductService(userId, productId);
+    return res.status(response.status).json(response.data);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
 module.exports = {
   createProductController,
   getProductController,
   getAllProductsController,
+  selectProductController,
 };

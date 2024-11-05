@@ -37,14 +37,13 @@ const loginService = async (username, password) => {
     const user = await User.findOne({
       username: username,
       password: password,
-    }).exec();
+    })
+      .select('-password  -__v')
+      .exec();
     if (user) {
       return {
         EC: 0,
-        user: {
-          username: user.username,
-          name: user.name,
-        },
+        user: user,
       };
     } else {
       return { EC: 1, EM: 'Username/password not found' };
@@ -59,7 +58,7 @@ const loginService = async (username, password) => {
 const getUserService = async (username) => {
   try {
     const user = await User.findOne({ username })
-      .select('-password -_id -__v')
+      .select('-password  -__v')
       .exec();
     if (user) {
       return {
