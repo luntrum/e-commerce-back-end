@@ -76,8 +76,68 @@ const getUserService = async (username) => {
   }
 };
 
+const updateUserService = async (userId, data) => {
+  try {
+    const user = await User.findById(userId).exec();
+    if (!user) {
+      throw { status: 404, message: 'User not found' };
+    }
+    const updateReq = data.updateReq;
+
+    if (updateReq === 'update_items') {
+      for (const item of data.items) {
+        const { productId, quantity } = item;
+        const existingProductIndex = user.selectedProducts.findIndex(
+          (product) => product.productId.toString() === productId.toString(),
+        );
+        console.log('>>>existingProduct', existingProductIndex);
+
+        if (existingProductIndex !== -1) {
+          user.selectedProducts[existingProductIndex].quantity = quantity;
+        } else {
+          user.selectedProducts.push({ productId, quantity });
+        }
+      }
+    } else {
+      switch (updateReq) {
+        case 'delete_all_items':
+          user.selectedProducts = [];
+          break;
+        case 'delete_item':
+          user.selectedProducts = user.selectedProducts.filter(
+            (sp) => sp.productId !== data.item,
+          );
+          break;
+        case 'update_item':
+          const productIndex = user.selectedProducts.findIndex(
+            (sp) => sp.productId === data.productId,
+          );
+          if (productIndex !== -1) {
+            user.selectedProducts[productIndex].quantity = data.quantity;
+          }
+          break;
+        default:
+          break;
+      }
+    }
+
+    await user.save();
+    return {
+      status: 200,
+      data: user,
+    };
+  } catch (error) {
+    console.log(error);
+    if (error.message === 'User not found') {
+      throw { status: 404, message: 'User not found' };
+    }
+    return null;
+  }
+};
+
 module.exports = {
   createUserService,
   loginService,
   getUserService,
+  updateUserService,
 };

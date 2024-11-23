@@ -3,6 +3,7 @@ const {
   createUserService,
   loginService,
   getUserService,
+  updateUserService,
 } = require('../services/userService');
 
 const createUser = async (req, res) => {
@@ -50,4 +51,15 @@ const getUser = async (req, res) => {
   }
 };
 
-module.exports = { createUser, handleLogin, getUser };
+const handleUpdateUser = async (req, res) => {
+  const { userId, data } = req.body;
+  const updatedData = await updateUserService(userId, data);
+
+  if (updatedData) {
+    return res.status(updatedData.status).json(updatedData.data);
+  } else {
+    return res.status(400).json({ message: 'Cập nhật người dùng thất bị' });
+  }
+};
+
+module.exports = { createUser, handleLogin, getUser, handleUpdateUser };

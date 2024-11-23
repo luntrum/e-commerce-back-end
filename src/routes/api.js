@@ -3,6 +3,7 @@ const {
   createUser,
   handleLogin,
   getUser,
+  handleUpdateUser,
 } = require('../controllers/userController');
 const {
   createProductController,
@@ -21,6 +22,7 @@ routerAPI.get('/', (req, res) => {
 routerAPI.post('/register', createUser);
 routerAPI.post('/login', handleLogin);
 routerAPI.post('/user', getUser);
+routerAPI.patch('/updateUser', handleUpdateUser);
 
 routerAPI.post('/addProduct', createProductController);
 routerAPI.get('/getProduct', getProductController);
