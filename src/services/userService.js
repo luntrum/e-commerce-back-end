@@ -116,6 +116,12 @@ const updateUserService = async (userId, data) => {
             user.selectedProducts[productIndex].quantity = data.quantity;
           }
           break;
+        case 'remove_purchase_items':
+          const productIdsToRemove = data.data.map((item) => item.productId);
+          user.selectedProducts = user.selectedProducts.filter(
+            (sp) => !productIdsToRemove.includes(sp.productId),
+          );
+          break;
         default:
           break;
       }
